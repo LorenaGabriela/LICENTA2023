@@ -1,0 +1,226 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <style>
+        {% load static %}
+
+        .upload-container {
+            max-width: 600px;
+            margin: auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            text-align: center;
+            background-color: rgba(169, 169, 169, 0.8);
+        }
+
+        /* Stilizare pentru butoane și zona de încărcare */
+        .upload-btn-wrapper {
+            position: relative;
+            overflow: hidden;
+            display: inline-block;
+            margin-bottom: 20px;
+        }
+
+        .loading-icon {
+            display: none; /* Inițial, ascundeți iconița de loading */
+            font-size: 24px;
+            margin-top: 10px;
+        }
+        .btn {
+            border: 2px solid gray;
+            color: gray;
+            background-color: white;
+            padding: 8px 20px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        .upload-btn-wrapper input[type=file] {
+            font-size: 100px;
+            position: absolute;
+            left: 0;
+            top: 0;
+            opacity: 0;
+        }
+
+        /* Stilizare pentru butoanele "Delete Photo" și "Submit" */
+        .action-btns {
+            margin-top: 20px;
+        }
+
+        .delete-btn, .submit-btn {
+            padding: 10px 20px;
+            font-size: 16px;
+            margin-right: 10px;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        .delete-btn {
+            background-color: #ff5252; /* Roșu */
+            color: white;
+        }
+
+        .submit-btn {
+            background-color: #4caf50; /* Verde */
+            color: white;
+        }
+        .uploaded-image {
+        margin-top: 20px; /* Spațiu între diagnostic și imagine */
+        text-align: center;
+    }
+
+    .uploaded-image img {
+        max-width: 100%;
+    height: auto;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+}
+    }
+
+    /* Stilizare pentru diagnostic */
+    .diagnostic {
+        margin-top: 10px; /* Spațiu între diagnostic și restul conținutului */
+        font-size: 16px; /* Dimensiunea textului pentru diagnostic */
+        font-weight: bold; /* Textul diagnosticului este îngroșat */
+    }
+    .upload-btn-wrapper {
+    margin-bottom: 10px; /* Spațiu între "Alegeți fișierul" și "Descriere" */
+}
+
+.description-wrapper {
+    text-align: left; /* Aliniați descrierea la stânga */
+    margin-top: 10px; /* Spațiu între "Alegeți fișierul" și "Descriere" */
+}
+    </style>
+
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="UTF-8">
+    <title>Medical Website HomePage</title>
+</head>
+<body>
+<header>
+
+    <nav>
+        <a href="/">
+            <a href=""><img src="{% static 'logo.png' %}">X-RayVision </a>
+        </a>
+        <div class="nav-links">
+            <ul>
+
+                <li>
+                    <a href="">Despre noi</a>
+                </li>
+                <li>
+                    <a href="">Contact</a>
+                </li>
+                <li>
+                    <a href="/">Acasa</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="text-box">
+<!--         upload_photo.html -->
+        <div class="upload-container">
+            {% if uploaded_file %}
+            <div id="preview-container" class="uploaded-image" style="display: none;">
+        <img id="preview-image" alt="Imagine încărcată">
+    </div>
+        {% endif %}
+
+<form method="post" enctype="multipart/form-data"action="{% url 'upload_photo_pacient' %}" onsubmit="uploadImage(event)">
+    {% csrf_token %}
+    <div class="upload-btn-wrapper">
+        <button class="btn">Alegeți fișierul</button>
+
+       <input type="file" name="file" accept="image/*" id="id_file" onchange="previewImage(this)">
+
+    </div>
+    <div class="description-wrapper">
+        <label for="id_description">Descriere:</label>
+        {{ form.description }}
+    </div>
+
+    <button type="submit" class="btn"onclick="uploadImage(event)">Încărcați imaginea</button>
+    {{ form.file}}
+</form>
+
+<div id="preview-container" class="uploaded-image" style="display: none;">
+    <img id="preview-image" alt="Imagine încărcată">
+</div>
+
+
+            <!-- Butoanele "Delete Photo" și "Submit" -->
+            <div class="action-btns">
+                <button class="delete-btn" onclick="deletePhoto()">Delete Photo</button>
+                <button class="submit-btn" onclick="submitForm()">Submit</button>
+                <div id="diagnostic-container" class="diagnostic" style="display: none;">
+    <p id="diagnostic-text" ></p>
+    <a> diagnostic</a>
+</div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+</header>
+<script>
+    function uploadImage(event) {
+    console.log('Funcția uploadImage este apelată!');
+    document.getElementById('loadingIcon').style.display = 'inline';
+    // If you want to allow the default form submission, remove the next line
+    event.preventDefault();
+    // Add logic here to submit the form using JavaScript if needed
+    // Example: document.getElementById('yourFormId').submit();
+}
+
+    function deletePhoto() {
+        // Implementați logica pentru ștergerea fotografiei
+        alert('Fotografia a fost ștearsă!');
+    }
+
+    function submitForm() {
+        // Implementați logica pentru trimiterea formularului
+        // Aici apelați funcția predict_image_class cu calea către imagine
+        var imagePath = document.getElementById('id_file').value; // Obțineți calea către imagine
+        predict_image_class(imagePath);
+    }
+
+    function showLoadingIcon() {
+        console.log('Iconița de loading ar trebui să apară acum.');
+        document.getElementById('loadingIcon').style.display = 'inline';
+    }
+
+    function previewImage(input) {
+        var previewContainer = document.getElementById('preview-container');
+        var previewImage = document.getElementById('preview-image');
+
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+
+            reader.onload = function (e) {
+                previewImage.src = e.target.result;
+                previewContainer.style.display = 'block';
+            };
+
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+    function displayDiagnostic(diagnostic) {
+        // Afișați rezultatul diagnosticului în zona corespunzătoare
+        document.getElementById('diagnostic-text').innerText = diagnostic;
+        document.getElementById('diagnostic-container').style.display = 'block';
+    }
+</script>
+
+
+</body>
+</html>

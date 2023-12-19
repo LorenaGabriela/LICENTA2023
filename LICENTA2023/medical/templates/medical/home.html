@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<style>
+
+   {% load static %}
+
+</style>
+
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="UTF-8">
+    <title>Medical Website HomePage</title>
+</head>
+<body>
+<header>
+
+
+    <nav>
+    <a href="/">
+        <a href=""><img src="{% static 'logo.png' %}">X-RayVision </a>
+    </a>
+        <div class="nav-links">
+
+            <ul>
+                <li>
+<!--                    <a href="">Acasa</a>-->
+                </li>
+                <li>
+                    <a href="">Despre noi</a>
+                </li>
+                <li>
+                    <a href="">Contact</a>
+                </li>
+                <li>
+                    <a href="/login_pacient">Autentificare</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="text-box">
+        <h1>
+            Diagnosticul în palma ta, cu o radiografie!
+        </h1>
+        <p>
+            Cu X-RayVision, puteți obține diagnoze medicale rapide și exacte pe baza radiografiilor.<br> Fiți la curent cu starea dumneavoastră de sănătate mai ușor ca niciodată.
+        </p>
+        <a href="/register_pacient" class="hero-btn">Inregistrare Pacient</a>
+
+    </div>
+
+</header>
+</body>
+
+</html>
